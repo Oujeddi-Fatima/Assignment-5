@@ -11,20 +11,18 @@ async function getsUsersAsync(){
    return data;
   }
   catch(err){
-
+    return err;
   }
-  return data || '';
 }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.end('Welcome');
+  res.end('Welcome check the users using the following paths : /promise , /async or /observable :)');
 });
 
 
 
-router.get('/promise/', function(req, res, next) {
-  //res.render('index', { title: 'Express' });
+router.get('/promise', function(req, res, next) {
   var dataPromise = fetch('http://jsonplaceholder.typicode.com/users/');
 
   dataPromise.then(data=>data.json())
@@ -32,24 +30,27 @@ router.get('/promise/', function(req, res, next) {
   .catch(err=>console.log('this is an error'+err));
 });
 
-router.get('/observable/', function(req, res, next) {
+router.get('/observable', function(req, res, next) {
 
-  var dataPromise = fetch('http://jsonplaceholder.typicode.com/users/');
-var datas=[] ;
+  var dataPromise = fetch('http://jsonplaceholder.typicode.com/users/')
+  .then(data => data.json() )
+  .then(data => res.render('index', { users:data}))
+  .catch(err => console.log(err));
+
   Rx.Observable.fromPromise(dataPromise)
   .subscribe(
-      data => datas.push(data.json()), 
+      data => res.render('index',{ users:data}),
       err => console.error('this is an error'+err),
-      () => console.log(datas)//res.render('index',{ users:datas})
+      () => console.log('DONE')//
   );
 });
 
 router.get('/async', function(req, res, next) {
-  const data = getsUsersAsync()
-  .then(data => {   return data.json()  })
+  getsUsersAsync()
+  .then(data => data.json() )
   .then(data => res.render('index', { users:data}))
   .catch(err => console.log(err));
 });
-  
+
 
 module.exports = router;

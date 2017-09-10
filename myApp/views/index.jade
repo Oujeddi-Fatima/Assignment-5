@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    block content
+
+
+ table#users
+    thead
+      tr.head
+        th Id 
+        th name
+        th Username
+        th Email
+        th City
+        th Zip code
+        th Latitude
+        th Longitude
+        th Website
+    tbody
+      each val in users
+        tr
+          td #{val.id}
+          td #{val.name}
+          td #{val.username}
+          td #{val.email}
+          td #{val.address.city}
+          td #{val.address.zipcode}
+          td #{val.address.geo.lat}
+          td #{val.address.geo.lng}
+          td #{val.website}
